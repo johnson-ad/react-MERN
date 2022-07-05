@@ -26,3 +26,21 @@ app.get('/insert', async (req, res) => {
     res.send("Inserted data")
 });
 
+
+/**
+ * @description - This is a route that will be used to get all friends in the database.
+ * @param {GET} is the method that will be used to get all friends in the database.
+ */
+app.get('/read', async (req, res) => {
+    // On récupère tous les amis de la base de données et les affiches
+    FriendsModel.find({}, (err, result) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(result);
+        }
+    })
+});
+
+
+
