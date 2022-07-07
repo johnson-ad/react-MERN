@@ -47,4 +47,23 @@ app.get('/read', async (req, res) => {
 });
 
 
+app.put('/update', async (req, res) => {
+
+    const newAge = req.body.newAge;
+    const id = req.body.id;
+    console.log(newAge, id);
+
+    try {
+        await FriendsModel.findById(id, (error, friendToUpdate) => {
+            friendToUpdate.age = Number(newAge);
+            friendToUpdate.save();
+        })
+    } catch (err) {
+        console.log(err)
+    }
+    res.send("You are connected");
+
+});
+
+
 

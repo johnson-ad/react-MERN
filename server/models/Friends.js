@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 /**
  * @param {Schema} represent the schema of the model in mongoDB
  */
@@ -25,6 +24,5 @@ const FriendsSchema = new mongoose.Schema({
  * @param {FriendsSchema} Represente the Schema.
  */
 const FriendsModel = mongoose.model('friends', FriendsSchema);
-
 
 module.exports = FriendsModel;

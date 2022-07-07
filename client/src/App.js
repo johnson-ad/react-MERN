@@ -20,11 +20,22 @@ function App() {
       name: name,
       age: age,
     }).then(() => {
-      alert('yey, it worked')
+      // affiche automatiquement la liste des amis si il ya une nouvelle data
+      setListOfFriends([...listOfFriends, { name: name, age: age }]);
     }).catch(() => {
       alert('nope, it didn\'t work')
     })
   }
+
+  const updateFriend = (id) => {
+    const newAge = prompt('Enter new age');
+    Axios.put('http://localhost:3001/update', { newAge: newAge, id: id }).then(() => {
+      setListOfFriends(listOfFriends.map((val) => {
+        return val._id === id ? { _id: id, name: val.name, age: newAge } : val;
+      }))
+    })
+  };
+
 
   useEffect(() => {
     // On récupère tous les amis de la base de données et les affiches
@@ -44,17 +55,22 @@ function App() {
         <button onClick={() => addFriend()}>Add Friend</button>
       </div>
 
-
-      {
-        listOfFriends.map((friend, index) => {
-          return (
-            <div key={index}>
-              <p>{friend.name}</p>
-              <p>{friend.age}</p>
-            </div>
-          )
-        })
-      }
+      <div className='listOfFriends'>
+        {
+          listOfFriends.map((val, index) => {
+            return (
+              <div className='friendContainer'>
+                <div key={index} className='friend'>
+                  <h3>Name: {val.name}</h3>
+                  <h3>Age: {val.age}</h3>
+                </div>
+                <button onClick={() => { updateFriend(val._id) }}>Update</button>
+                <button>X</button>
+              </div>
+            )
+          })
+        }
+      </div>
     </div>
   );
 }
