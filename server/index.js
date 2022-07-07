@@ -1,7 +1,12 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const FriendsModel = require('./models/Friends');
+
+// Connect to MongoDB at your frontend
+app.use(cors());
+app.use(express.json());
 
 mongoose.connect('mongodb://localhost:27017/learnMRN?readPreference=primary&appname=MongoDB%20Compass&ssl=false', { useNewUrlParser: true });
 
@@ -14,16 +19,15 @@ app.listen(3001, () => {
  * @param {GET} is the method that will be used to create a new friend in the database.
  * @param {async} on utilise la fonction async car on fait une requête asynchrone.
  */
-app.get('/insert', async (req, res) => {
-    // On crée un nouvel objet Friend avec la meme configuration de notre Schema FriendsSchema
-    const friend = new FriendsModel({
-        name: 'Jessyca',
-        age: 20,
-        description: 'She is beautiful'
-    });
-    await friend.save(); // pour enregistrer dans la base de données
+app.post('/addfriend', async (req, res) => {
+    // On recuprer les data depuis le frontend (req.body) NB: body c'est le dieux param de notre Axios.post()
+    const name = req.body.name;
+    const age = req.body.age;
 
-    res.send("Inserted data")
+    //On crée un nouvel objet Friend avec la meme configuration de notre Schema FriendsSchema
+    const friend = new FriendsModel({ name: name, age: age });
+    await friend.save(); // pour enregistrer dans la base de données
+    res.send("Success");
 });
 
 
