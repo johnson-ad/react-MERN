@@ -1,11 +1,12 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Axios from 'axios';
 
 function App() {
 
   const [name, setName] = useState('');
   const [age, setAge] = useState(0);
+  const [listOfFriends, setListOfFriends] = useState([]);
 
   const addFriend = () => {
     /**
@@ -25,6 +26,16 @@ function App() {
     })
   }
 
+  useEffect(() => {
+    // On récupère tous les amis de la base de données et les affiches
+    //on a juste besion de l'url etle roote 
+    Axios.get('http://localhost:3001/read').then(res => {
+      setListOfFriends(res.data);
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [])
+
   return (
     <div className="App">
       <div className='inputs'>
@@ -32,6 +43,18 @@ function App() {
         <input type='number' placeholder='Friend age...' onChange={(e) => { setAge(e.target.value) }} />
         <button onClick={() => addFriend()}>Add Friend</button>
       </div>
+
+
+      {
+        listOfFriends.map((friend, index) => {
+          return (
+            <div key={index}>
+              <p>{friend.name}</p>
+              <p>{friend.age}</p>
+            </div>
+          )
+        })
+      }
     </div>
   );
 }
