@@ -19,12 +19,13 @@ function App() {
     Axios.post('http://localhost:3001/addfriend', {
       name: name,
       age: age,
-    }).then(() => {
+    }).then((response) => {
       // affiche automatiquement la liste des amis si il ya une nouvelle data
-      setListOfFriends([...listOfFriends, { name: name, age: age }]);
+      setListOfFriends([...listOfFriends, { _id: response.data._id, name: name, age: age }]);
     }).catch(() => {
       alert('nope, it didn\'t work')
     })
+
   }
 
   const updateFriend = (id) => {
@@ -36,6 +37,13 @@ function App() {
     })
   };
 
+  const deleteFriend = (id) => {
+    Axios.delete(`http://localhost:3001/delete/${id}`).then(() => {
+      setListOfFriends(listOfFriends.filter((val) => {
+        return val._id !== id;
+      }));
+    });
+  };
 
   useEffect(() => {
     // On récupère tous les amis de la base de données et les affiches
@@ -65,7 +73,7 @@ function App() {
                   <h3>Age: {val.age}</h3>
                 </div>
                 <button onClick={() => { updateFriend(val._id) }}>Update</button>
-                <button>X</button>
+                <button onClick={() => { deleteFriend(val._id) }}>X</button>
               </div>
             )
           })

@@ -27,7 +27,7 @@ app.post('/addfriend', async (req, res) => {
     //On crée un nouvel objet Friend avec la meme configuration de notre Schema FriendsSchema
     const friend = new FriendsModel({ name: name, age: age });
     await friend.save(); // pour enregistrer dans la base de données
-    res.send("Success");
+    res.send(friend); //pour eviter les problems de copie d'object dans le frontend
 });
 
 
@@ -51,7 +51,6 @@ app.put('/update', async (req, res) => {
 
     const newAge = req.body.newAge;
     const id = req.body.id;
-    console.log(newAge, id);
 
     try {
         await FriendsModel.findById(id, (error, friendToUpdate) => {
@@ -66,4 +65,18 @@ app.put('/update', async (req, res) => {
 });
 
 
-
+app.delete('/delete/:id', async (req, res) => {
+    // ici on utilise params et non body
+    const id = req.params.id;
+    try {
+        /**
+         * @description - This is a route that will be used to delete a friend in the database.
+         * @param {DELETE} is the method that will be used to delete a friend in the database.
+         * @param {REMOVE} is the method that will be used to delete a friend in the database.
+         */
+        await FriendsModel.findByIdAndRemove(id).exec();
+    } catch (err) {
+        console.log(err)
+    }
+    res.send("Item is deleted");
+});
